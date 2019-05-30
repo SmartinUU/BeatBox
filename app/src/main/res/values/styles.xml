@@ -12,7 +12,7 @@
     </style>
 
     <style name="BeatBoxButton" parent="Base.TextAppearance.AppCompat.Button">
-        <item name="android:background">@color/dark_blue</item>
+        <item name="android:background">@drawable/selector_beat_box</item>
     </style>
 
     <style name="BeatBoxButton.Strong">
