@@ -16,6 +16,11 @@ import android.databinding.Bindable;
  */
 public class SoundViewModel extends BaseObservable {
     private Sound mSound;
+    private BeatBox mBeatBox;
+
+    public SoundViewModel(BeatBox beatBox) {
+        mBeatBox = beatBox;
+    }
 
     @Bindable
     public String getTitle() {
@@ -34,5 +39,9 @@ public class SoundViewModel extends BaseObservable {
     public void setSound(Sound sound) {
         mSound = sound;
         notifyChange();
+    }
+
+    public void onButtonClicked() {
+        mBeatBox.play(mSound);
     }
 }

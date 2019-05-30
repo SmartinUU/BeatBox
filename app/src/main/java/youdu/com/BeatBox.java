@@ -1,7 +1,10 @@
 package youdu.com;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.util.Log;
 
 import java.io.IOException;
@@ -18,12 +21,16 @@ import java.util.List;
 public class BeatBox {
     private static final String TAG = "BeatBox";
     private static final String SOUNDS_FOLDER = "sample_sounds";
+    private static final int MAX_SOUND = 5;
 
     private AssetManager mAsset;
     private List<Sound> mSounds = new ArrayList<>();
+    private SoundPool mSoundPool;
 
     public BeatBox(Context context) {
         mAsset = context.getAssets();
+        // This old constructor is deprecated, but we need it for compatibility.
+        mSoundPool = new SoundPool(MAX_SOUND, AudioManager.STREAM_MUSIC, 0);
         loadSounds();
     }
 
@@ -42,8 +49,45 @@ public class BeatBox {
         for (String filename : soundNames) {
             String assetPath = SOUNDS_FOLDER + "/" + filename;
             Sound sound = new Sound(assetPath);
+            try {
+                load(sound);
+            } catch (IOException e) {
+                Log.e(TAG, "Could not load sound" + filename, e);
+            }
             mSounds.add(sound);
         }
+    }
+
+    /**
+     * 播放储存在SoundPool中的音频
+     *
+     * @param sound
+     */
+    public void play(Sound sound) {
+        Integer sooundId = sound.getSoundId();
+        if (sooundId == null) {
+            return;
+        }
+        mSoundPool.play(sooundId, 1.0f, 1.0f, 1, 0, 1.0f);
+    }
+
+    /**
+     * 释放SoundPool
+     */
+    public void release() {
+        mSoundPool.release();
+    }
+
+    /**
+     * 调用 mSoundPool.load(AssetFileDescriptor, int) 方法可以把文件载入 SoundPool 待播。
+     *
+     * @param sound
+     * @throws IOException
+     */
+    private void load(Sound sound) throws IOException {
+        AssetFileDescriptor afd = mAsset.openFd(sound.getAssetPath());
+        int soundId = mSoundPool.load(afd, 1);
+        sound.setSoundId(soundId);
     }
 
     /**

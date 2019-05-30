@@ -8,6 +8,7 @@ package youdu.com;
 public class Sound {
     private String mAssetPath;
     private String mName;
+    private Integer mSoundId;
 
     public Sound(String assetPath) {
         mAssetPath = assetPath;
@@ -27,9 +28,18 @@ public class Sound {
 
     /**
      * 仅返回单个文件名（不带后缀）
+     *
      * @return
      */
     public String getName() {
         return mName;
+    }
+
+    public Integer getSoundId() {
+        return mSoundId;
+    }
+
+    public void setSoundId(Integer soundId) {
+        mSoundId = soundId;
     }
 }
